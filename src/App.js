@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import React from 'react'
+import screenfull from 'screenfull'
+import YouTube from 'react-youtube'
+import DeviceDetector from 'device-detector-js'
+import PropTypes from 'prop-types'
+import { makeStyles } from '@material-ui/core/styles'
+export default function YTPlayer(props) {
+  const dd = new DeviceDetector()
+  const mobile = dd.usesMobileBrowser()
+  const fullScreen = (event) => {
+    var iframe = event.target.getIframe()
+    if (screenfull.isEnabled) {
+      screenfull.request(iframe)
+    }
+  }
+  const opts = {
+    height: '100%',
+    width: '100%',
+    autoplay: '1',
+  }
+  const useStyles = makeStyles({
+    videoDiv: {
+      width: '100%',
+      height: '100%',
+    },
+  })
+  const classes = useStyles()
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <YouTube
+      style={{ height: '100vh' }}
+      containerClassName={classes.videoDiv}
+      videoId={'dQw4w9WgXcQ'}
+      opts={opts}
+      onPlay={() => (mobile ? fullScreen : {})}
+    />
+  )
 }
-
-export default App;
+YTPlayer.propTypes = {
+  id: PropTypes.string,
+}
